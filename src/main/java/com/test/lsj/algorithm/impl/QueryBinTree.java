@@ -3,7 +3,6 @@ package com.test.lsj.algorithm.impl;
 import com.test.lsj.algorithm.bean.BinTreeNode;
 import com.test.lsj.algorithm.interfaces.BinTree;
 import com.test.lsj.algorithm.utils.AlgorithmTool;
-import com.test.lsj.algorithm.utils.BinTreeUtils;
 
 /**
  * QueryBinTree
@@ -13,14 +12,14 @@ public class QueryBinTree implements BinTree {
     public static void main(String[] args) {
         QueryBinTree queryBinTree = new QueryBinTree();
         // int[] arrays = AlgorithmTool.createRandoms(10, 100);
-        int[] arrays = new int[]{66,89,87,86,88};
+        int[] arrays = new int[]{88,77,44,33,55};
         AlgorithmTool.listArrays();
         BinTreeNode root = new BinTreeNode();
         queryBinTree.createTree(root,arrays);
         // BinTreeUtils.PreViewTree(root);
         //BinTreeNode targetNode =  queryBinTree.getPredecessor(root);
         // BinTreeNode targetNode =  queryBinTree.getNode(root,45);
-        BinTreeNode targetNode =  queryBinTree.getPredecessor(root,88);
+        BinTreeNode targetNode =  queryBinTree.getSuccessor(root,55);
         System.out.println(targetNode);
         
     }
@@ -108,7 +107,7 @@ public class QueryBinTree implements BinTree {
         return node;
     }
 
-    // 获取节点前驱
+    // 获取节点前驱(获取比当前节点小的节点集中最大的接节点)
     public BinTreeNode getPredecessor(BinTreeNode root,int value){
         BinTreeNode node = getNode(root,value);
         BinTreeNode tmp;
@@ -127,6 +126,34 @@ public class QueryBinTree implements BinTree {
             tmp = parentNode;
         }
 
+        return tmp;
+    }
+
+    // 获取后继节点(获取比当前节点大的节点集中最小的节点)
+    public BinTreeNode getSuccessor(BinTreeNode root,int value){
+        BinTreeNode node = getNode(root,value);
+        BinTreeNode tmp = null;
+        if(null == node) return null;
+        // 如果有右节点，则后继节点是右节点中最左的节点
+        if(null != node.getRight()){
+            tmp = node.getRight();
+            while(null != tmp && null != tmp.getLeft()){
+                tmp = tmp.getLeft();
+            }
+        }else{
+            BinTreeNode parent = node.getParent();
+            // 如果是父节点的左节点，则取父节点
+            if(parent != null && parent.getLeft() == node){
+                tmp = parent;
+            }
+            
+            // 如果是父节点的右节点，且父节点是其父节点的左节点，则取父节点
+            if(parent != null && parent.getRight() == node){
+                if(null != parent.getParent() && parent.getParent().getLeft() == parent){
+                    tmp = parent.getParent();
+                }
+            }
+        }
         return tmp;
     }
 
