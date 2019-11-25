@@ -3,6 +3,7 @@ package com.test.lsj.algorithm.impl;
 import com.test.lsj.algorithm.bean.BinTreeNode;
 import com.test.lsj.algorithm.interfaces.BinTree;
 import com.test.lsj.algorithm.utils.AlgorithmTool;
+import com.test.lsj.algorithm.utils.BinTreeUtils;
 
 /**
  * QueryBinTree
@@ -12,16 +13,17 @@ public class QueryBinTree implements BinTree {
     public static void main(String[] args) {
         QueryBinTree queryBinTree = new QueryBinTree();
         // int[] arrays = AlgorithmTool.createRandoms(10, 100);
-        int[] arrays = new int[]{88,77,44,33,55};
+        int[] arrays = new int[]{88,77,44,33,55,99};
         AlgorithmTool.listArrays();
         BinTreeNode root = new BinTreeNode();
         queryBinTree.createTree(root,arrays);
         // BinTreeUtils.PreViewTree(root);
         //BinTreeNode targetNode =  queryBinTree.getPredecessor(root);
         // BinTreeNode targetNode =  queryBinTree.getNode(root,45);
-        BinTreeNode targetNode =  queryBinTree.getSuccessor(root,55);
-        System.out.println(targetNode);
-        
+        // BinTreeNode targetNode =  queryBinTree.getSuccessor(root,55);
+        BinTreeNode targetNode = queryBinTree.delNode(root, 88);
+        BinTreeUtils.preViewTree(targetNode);
+        //System.out.println(targetNode);
     }
 
     @Override
@@ -71,8 +73,80 @@ public class QueryBinTree implements BinTree {
     @Override
     public BinTreeNode delNode(BinTreeNode node, int value) {
         if(null == node) return null;
+<<<<<<< Updated upstream
         if(node.getValue() == value){
 
+=======
+        BinTreeNode valueNode =  getNode(node, value);
+        if(null == valueNode){
+            return node;
+        }else{
+            if(null != valueNode.getLeft() && null !=valueNode.getRight()){
+                // 如果同时存在左右节点
+                BinTreeNode parentNode =  valueNode.getParent();
+                if(null == parentNode){
+                    // 如果父节点是空，可以选择左子树或者右子树作为根，这里选右子树作为根
+                    BinTreeNode rightNode = valueNode.getRight();
+                    BinTreeNode leftNode = valueNode.getLeft();
+                    // 获取右子树最小节点,接上左子树
+                    BinTreeNode rightMinNode = getMinNode(rightNode);
+                    rightMinNode.setLeft(leftNode);
+                    node = rightNode; 
+                }else if(valueNode == parentNode.getLeft()){
+                    // 如果是作为父节点的左子树，则需要用右节点替代父节点
+                    BinTreeNode rightNode = valueNode.getRight();
+                    BinTreeNode leftNode = valueNode.getLeft();
+                    // 获取右子树最小节点,接上左子树
+                    BinTreeNode rightMinNode = getMinNode(rightNode);
+                    rightMinNode.setLeft(leftNode);
+                    parentNode.setLeft(rightNode);
+                }else{
+                    // 如果是作为父节点的右子树，则需要用左节点替代父节点
+                    BinTreeNode rightNode = valueNode.getRight();
+                    BinTreeNode leftNode = valueNode.getLeft();
+                    // 获取左子树最大节点,接上右子树
+                    BinTreeNode leftMaxNode = getMaxNode(leftNode);
+                    leftMaxNode.setRight(rightNode);
+                    parentNode.setRight(leftNode);
+                }
+            }else if(null != valueNode.getLeft()){
+                // 如果只存在左节点，用左节点代替被删除的父节点
+                BinTreeNode parentNode =  valueNode.getParent();
+                if(null == parentNode){
+                    node = valueNode.getLeft();
+                }else{
+                    if(valueNode == parentNode.getLeft()){
+                        node.setLeft(valueNode.getLeft());
+                    }else{
+                        node.setRight(valueNode.getLeft());
+                    }
+                }
+            }else if(null != valueNode.getRight()){
+                // 如果只存在右节点，用右节点代替被删除的父节点
+                BinTreeNode parentNode =  valueNode.getParent();
+                if(null == parentNode){
+                    node = valueNode.getRight();
+                }else{
+                    if(valueNode == parentNode.getLeft()){
+                        node.setLeft(valueNode.getRight());
+                    }else{
+                        node.setRight(valueNode.getRight());
+                    }
+                }
+            }else{
+                // 作为叶子节点被删除
+                BinTreeNode parentNode =  valueNode.getParent();
+                if(null == parentNode){
+                    return null;
+                }else{
+                    if(valueNode == parentNode.getLeft()){
+                        parentNode.setLeft(null);
+                    }else{
+                        parentNode.setRight(null);
+                    }
+                }
+            }
+>>>>>>> Stashed changes
         }
         return node;
     }
