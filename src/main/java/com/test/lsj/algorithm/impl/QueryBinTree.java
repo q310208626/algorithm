@@ -69,11 +69,12 @@ public class QueryBinTree implements BinTree {
     }
 
     @Override
-    public void delNode(BinTreeNode node, int value) {
-        if(null == node) return;
+    public BinTreeNode delNode(BinTreeNode node, int value) {
+        if(null == node) return null;
         if(node.getValue() == value){
 
         }
+        return node;
     }
 
     @Override
