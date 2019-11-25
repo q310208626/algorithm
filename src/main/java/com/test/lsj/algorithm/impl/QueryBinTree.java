@@ -73,13 +73,7 @@ public class QueryBinTree implements BinTree {
     @Override
     public BinTreeNode delNode(BinTreeNode node, int value) {
         if(null == node) return null;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         if(node.getValue() == value){
-
-=======
-=======
->>>>>>> Stashed changes
         BinTreeNode valueNode =  getNode(node, value);
         if(null == valueNode){
             return node;
@@ -149,10 +143,6 @@ public class QueryBinTree implements BinTree {
                     }
                 }
             }
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         }
         return node;
     }
