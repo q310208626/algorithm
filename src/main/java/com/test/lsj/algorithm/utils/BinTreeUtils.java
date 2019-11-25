@@ -10,10 +10,10 @@ import org.apache.log4j.Logger;
 public class BinTreeUtils {
     private static final Logger logger = Logger.getLogger(BinTreeUtils.class);
 
-    public static void PreViewTree(BinTreeNode root){
+    public static void preViewTree(BinTreeNode root){
         if(null == root) return;
         logger.debug(root.getValue());
-        PreViewTree(root.getLeft());
-        PreViewTree(root.getRight());
+        preViewTree(root.getLeft());
+        preViewTree(root.getRight());
     }
 }
