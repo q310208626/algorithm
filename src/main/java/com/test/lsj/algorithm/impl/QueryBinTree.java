@@ -73,73 +73,74 @@ public class QueryBinTree implements BinTree {
     @Override
     public BinTreeNode delNode(BinTreeNode node, int value) {
         if(null == node) return null;
-        if(node.getValue() == value){
+        if(node.getValue() == value){ 
         BinTreeNode valueNode =  getNode(node, value);
         if(null == valueNode){
             return node;
         }else{
             if(null != valueNode.getLeft() && null !=valueNode.getRight()){
                 // 如果同时存在左右节点
-                BinTreeNode parentNode =  valueNode.getParent();
-                if(null == parentNode){
-                    // 如果父节点是空，可以选择左子树或者右子树作为根，这里选右子树作为根
-                    BinTreeNode rightNode = valueNode.getRight();
-                    BinTreeNode leftNode = valueNode.getLeft();
-                    // 获取右子树最小节点,接上左子树
-                    BinTreeNode rightMinNode = getMinNode(rightNode);
-                    rightMinNode.setLeft(leftNode);
-                    node = rightNode; 
-                }else if(valueNode == parentNode.getLeft()){
-                    // 如果是作为父节点的左子树，则需要用右节点替代父节点
-                    BinTreeNode rightNode = valueNode.getRight();
-                    BinTreeNode leftNode = valueNode.getLeft();
-                    // 获取右子树最小节点,接上左子树
-                    BinTreeNode rightMinNode = getMinNode(rightNode);
-                    rightMinNode.setLeft(leftNode);
-                    parentNode.setLeft(rightNode);
-                }else{
-                    // 如果是作为父节点的右子树，则需要用左节点替代父节点
-                    BinTreeNode rightNode = valueNode.getRight();
-                    BinTreeNode leftNode = valueNode.getLeft();
-                    // 获取左子树最大节点,接上右子树
-                    BinTreeNode leftMaxNode = getMaxNode(leftNode);
-                    leftMaxNode.setRight(rightNode);
-                    parentNode.setRight(leftNode);
-                }
-            }else if(null != valueNode.getLeft()){
-                // 如果只存在左节点，用左节点代替被删除的父节点
-                BinTreeNode parentNode =  valueNode.getParent();
-                if(null == parentNode){
-                    node = valueNode.getLeft();
-                }else{
-                    if(valueNode == parentNode.getLeft()){
-                        node.setLeft(valueNode.getLeft());
+                    BinTreeNode parentNode =  valueNode.getParent();
+                    if(null == parentNode){
+                        // 如果父节点是空，可以选择左子树或者右子树作为根，这里选右子树作为根
+                        BinTreeNode rightNode = valueNode.getRight();
+                        BinTreeNode leftNode = valueNode.getLeft();
+                        // 获取右子树最小节点,接上左子树
+                        BinTreeNode rightMinNode = getMinNode(rightNode);
+                        rightMinNode.setLeft(leftNode);
+                        node = rightNode; 
+                    }else if(valueNode == parentNode.getLeft()){
+                        // 如果是作为父节点的左子树，则需要用右节点替代父节点
+                        BinTreeNode rightNode = valueNode.getRight();
+                        BinTreeNode leftNode = valueNode.getLeft();
+                        // 获取右子树最小节点,接上左子树
+                        BinTreeNode rightMinNode = getMinNode(rightNode);
+                        rightMinNode.setLeft(leftNode);
+                        parentNode.setLeft(rightNode);
                     }else{
-                        node.setRight(valueNode.getLeft());
+                        // 如果是作为父节点的右子树，则需要用左节点替代父节点
+                        BinTreeNode rightNode = valueNode.getRight();
+                        BinTreeNode leftNode = valueNode.getLeft();
+                        // 获取左子树最大节点,接上右子树
+                        BinTreeNode leftMaxNode = getMaxNode(leftNode);
+                        leftMaxNode.setRight(rightNode);
+                        parentNode.setRight(leftNode);
                     }
-                }
-            }else if(null != valueNode.getRight()){
-                // 如果只存在右节点，用右节点代替被删除的父节点
-                BinTreeNode parentNode =  valueNode.getParent();
-                if(null == parentNode){
-                    node = valueNode.getRight();
-                }else{
-                    if(valueNode == parentNode.getLeft()){
-                        node.setLeft(valueNode.getRight());
+                }else if(null != valueNode.getLeft()){
+                    // 如果只存在左节点，用左节点代替被删除的父节点
+                    BinTreeNode parentNode =  valueNode.getParent();
+                    if(null == parentNode){
+                        node = valueNode.getLeft();
                     }else{
-                        node.setRight(valueNode.getRight());
+                        if(valueNode == parentNode.getLeft()){
+                            node.setLeft(valueNode.getLeft());
+                        }else{
+                            node.setRight(valueNode.getLeft());
+                        }
                     }
-                }
-            }else{
-                // 作为叶子节点被删除
-                BinTreeNode parentNode =  valueNode.getParent();
-                if(null == parentNode){
-                    return null;
-                }else{
-                    if(valueNode == parentNode.getLeft()){
-                        parentNode.setLeft(null);
+                }else if(null != valueNode.getRight()){
+                    // 如果只存在右节点，用右节点代替被删除的父节点
+                    BinTreeNode parentNode =  valueNode.getParent();
+                    if(null == parentNode){
+                        node = valueNode.getRight();
                     }else{
-                        parentNode.setRight(null);
+                        if(valueNode == parentNode.getLeft()){
+                            node.setLeft(valueNode.getRight());
+                        }else{
+                            node.setRight(valueNode.getRight());
+                        }
+                    }
+                }else{
+                    // 作为叶子节点被删除
+                    BinTreeNode parentNode =  valueNode.getParent();
+                    if(null == parentNode){
+                        return null;
+                    }else{
+                        if(valueNode == parentNode.getLeft()){
+                            parentNode.setLeft(null);
+                        }else{
+                            parentNode.setRight(null);
+                        }
                     }
                 }
             }
