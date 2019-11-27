@@ -5,7 +5,7 @@ package com.test.lsj.algorithm.bean;
  */
 public class BinTreeNode {
     int value;
-    BinTreeNode parent;
+    //BinTreeNode parent;
     BinTreeNode left;
     BinTreeNode right;
 
@@ -51,19 +51,19 @@ public class BinTreeNode {
         this.right = right;
     }
 
-    /**
-     * @return the parent
-     */
-    public BinTreeNode getParent() {
-        return parent;
-    }
+    // /**
+    //  * @return the parent
+    //  */
+    // public BinTreeNode getParent() {
+    //     return parent;
+    // }
 
-    /**
-     * @param parent the parent to set
-     */
-    public void setParent(BinTreeNode parent) {
-        this.parent = parent;
-    }
+    // /**
+    //  * @param parent the parent to set
+    //  */
+    // public void setParent(BinTreeNode parent) {
+    //     this.parent = parent;
+    // }
     
 
 }
