@@ -9,7 +9,7 @@ import com.test.lsj.algorithm.bean.BinTreeNode;
  */
 public interface BinTree {
     BinTreeNode createTree(BinTreeNode root,int[] arrays);
-    void addNode(BinTreeNode node, int value);
+    BinTreeNode addNode(BinTreeNode node, int value);
     BinTreeNode delNode(BinTreeNode node, int value);
     BinTreeNode getNode(BinTreeNode node,int value);
     BinTreeNode getMaxNode(BinTreeNode node);

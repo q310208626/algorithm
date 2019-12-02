@@ -18,57 +18,57 @@ public class QueryBinTree implements BinTree {
         int[] arrays = new int[] { 88, 77, 44, 33, 55, 99 };
         AlgorithmTool.listArrays();
         BinTreeNode root = new BinTreeNode();
-        queryBinTree.createTree(root, arrays);
-        // BinTreeUtils.PreViewTree(root);
+        root = queryBinTree.createTree(null, arrays);
+        BinTreeUtils.preViewTree(root);
         BinTreeNode targetNode = queryBinTree.getPredecessor(root,88);
         // BinTreeNode targetNode = queryBinTree.getNode(root,45);
         // BinTreeNode targetNode = queryBinTree.getSuccessor(root,33);
         //BinTreeNode targetNode = queryBinTree.delNode(root, 88);
         // BinTreeUtils.preViewTree(targetNode);
-        System.out.println(targetNode);
+        // System.out.println(targetNode);
     }
 
     @Override
     public BinTreeNode createTree(BinTreeNode root, int[] arrays) {
 
-        if (null == arrays || 0 == arrays.length) {
+        if (0 == arrays.length) {
             return null;
         }
 
         for (int i = 0; i < arrays.length; i++) {
-            addNode(root, arrays[i]);
+            if(null == root){
+                root = addNode(root, arrays[i]);
+            }else{
+                addNode(root, arrays[i]);
+            }
+            
         }
 
         return root;
     }
 
     @Override
-    public void addNode(BinTreeNode node, int value) {
+    public BinTreeNode addNode(BinTreeNode node, int value) {
         // 传入空树
-        if (0 == node.getValue()) {
+        if (null == node) {
+            node = new BinTreeNode();
             node.setValue(value);
         } else {
-            BinTreeNode tmpNode = node;
+            BinTreeNode tmpNode = null;
 
-            int tmpValue = tmpNode.getValue();
+            int tmpValue = node.getValue();
             if (value < tmpValue) {
-                tmpNode = tmpNode.getLeft();
+                tmpNode = node.getLeft();
+                BinTreeNode leftTree = addNode(tmpNode, value);
+                node.setLeft(leftTree);
             } else {
-                tmpNode = tmpNode.getRight();
-            }
-
-            if (null == tmpNode) {
-                tmpNode = new BinTreeNode();
-                tmpNode.setValue(value);
-                if (value < tmpValue) {
-                    node.setLeft(tmpNode);
-                } else {
-                    node.setRight(tmpNode);
-                }
-            } else {
-                addNode(tmpNode, value);
+                tmpNode = node.getRight();
+                BinTreeNode rightTree = addNode(tmpNode, value);
+                node.setRight(rightTree);
             }
         }
+
+        return node;
     }
 
     @Override

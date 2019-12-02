@@ -5,6 +5,7 @@ package com.test.lsj.algorithm.bean;
  */
 public class BinTreeNode {
     int value;
+    int height;
     //BinTreeNode parent;
     BinTreeNode left;
     BinTreeNode right;
@@ -21,6 +22,20 @@ public class BinTreeNode {
      */
     public void setValue(int value) {
         this.value = value;
+    }
+
+    /**
+     * @return the height
+     */
+    public int getHeight() {
+        return height;
+    }
+
+    /**
+     * @param height the height to set
+     */
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     /**
@@ -65,5 +80,6 @@ public class BinTreeNode {
     //     this.parent = parent;
     // }
     
+
 
 }
