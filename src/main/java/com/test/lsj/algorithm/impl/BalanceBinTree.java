@@ -30,9 +30,9 @@ public class BalanceBinTree implements BinTree {
     }
 
     @Override
-    public void addNode(BinTreeNode node, int value) {
+    public BinTreeNode addNode(BinTreeNode node, int value) {
         // TODO Auto-generated method stub
-
+        return null;
     }
 
     @Override
