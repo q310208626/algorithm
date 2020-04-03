@@ -10,7 +10,7 @@ import com.test.lsj.algorithm.utils.BinTreeUtils;
 /**
  * QueryBinTree
  */
-public class QueryBinTree implements BinTree {
+public class QueryBinTree implements BinTree<BinTreeNode> {
 
     public static void main(String[] args) {
         QueryBinTree queryBinTree = new QueryBinTree();
