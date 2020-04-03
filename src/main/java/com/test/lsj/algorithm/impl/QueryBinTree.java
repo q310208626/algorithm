@@ -73,8 +73,9 @@ public class QueryBinTree implements BinTree {
 
     @Override
     public BinTreeNode delNode(BinTreeNode node, int value) {
-        if (null == node)
+        if (null == node) {
             return null;
+        }
             Stack<BinTreeNode> valueStack = getValueStack(node,value);
             BinTreeNode valueNode = null;
             if(!valueStack.isEmpty()){
@@ -158,8 +159,9 @@ public class QueryBinTree implements BinTree {
 
     @Override
     public BinTreeNode getNode(BinTreeNode node, int value) {
-        if (null == node)
+        if (null == node) {
             return null;
+        }
         if (value < node.getValue()) {
             return getNode(node.getLeft(), value);
         } else if (value > node.getValue()) {
@@ -172,8 +174,9 @@ public class QueryBinTree implements BinTree {
 
     @Override
     public BinTreeNode getMaxNode(BinTreeNode node) {
-        if (null == node)
+        if (null == node) {
             return null;
+        }
         while (null != node.getRight()) {
             node = node.getRight();
         }
@@ -182,8 +185,9 @@ public class QueryBinTree implements BinTree {
 
     @Override
     public BinTreeNode getMinNode(BinTreeNode node) {
-        if (null == node)
+        if (null == node) {
             return null;
+        }
         while (null != node.getLeft()) {
             node = node.getLeft();
         }
