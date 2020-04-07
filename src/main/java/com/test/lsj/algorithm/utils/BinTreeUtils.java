@@ -12,16 +12,20 @@ public class BinTreeUtils {
     private static final Logger logger = Logger.getLogger(BinTreeUtils.class);
 
     public static void preViewTree(BinTreeNode root){
-        if(null == root) return;
+        if(null == root) {
+            return;
+        }
         logger.debug(root.getValue());
         preViewTree(root.getLeft());
         preViewTree(root.getRight());
     }
 
     public static void preViewTree(TreeNode root){
-        if(null == root) return;
-        logger.debug(root.val);
-        preViewTree(root.left);
-        preViewTree(root.right);
+        if(null == root) {
+            return;
+        }
+        logger.debug(root.getValue());
+        preViewTree(root.getLeft());
+        preViewTree(root.getRight());
     }
 }

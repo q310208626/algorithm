@@ -47,8 +47,8 @@ public class RebulidBinTree {
             }
         }
 
-        rootNode.left = buildTree(pre,preStart + 1,preStart + index - inStart,in,inStart,index -1);
-        rootNode.right = buildTree(pre,preStart + index - inStart + 1,preEnd,in,index + 1,inEnd);
+        rootNode.setLeft(buildTree(pre,preStart + 1,preStart + index - inStart,in,inStart,index -1));
+        rootNode.setRight(buildTree(pre,preStart + index - inStart + 1,preEnd,in,index + 1,inEnd));
         return rootNode;
     }
 }
