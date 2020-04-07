@@ -7,6 +7,7 @@ import java.util.Stack;
 
 import com.test.lsj.algorithm.bean.BinTreeNode;
 import com.test.lsj.algorithm.interfaces.BinTree;
+import com.test.lsj.algorithm.utils.BinTreeUtils;
 
 /**
  * BalanceBinTree
@@ -15,13 +16,26 @@ public class BalanceBinTree implements BinTree<AVLTreeNode> {
     AVLTreeNode avlTreeNode;
 
     public static void main(String[] args) {
-        int[] randomArrays = AlgorithmTool.createRandoms(10, 100);
+//        int[] randomArrays = AlgorithmTool.createRandoms(5, 100);
+        int[] randomArrays = new int[]{72,89,88,34,71};
         AlgorithmTool.listArrays();
+        BalanceBinTree balanceBinTree = new BalanceBinTree();
+        AVLTreeNode node = balanceBinTree.createTree(null,randomArrays);
+        BinTreeUtils.preViewTree(node);
     }
 
     @Override
     public AVLTreeNode createTree(AVLTreeNode root, int[] arrays) {
-        return null;
+        if(null == arrays || 0 == arrays.length){
+            return null;
+        }
+
+        for (int value : arrays) {
+            root = addNode(root,value);
+        }
+
+        return root;
+
     }
 
     @Override
@@ -51,9 +65,29 @@ public class BalanceBinTree implements BinTree<AVLTreeNode> {
             }
         }
 
-        // 插入节点后进行树的平衡操作
+        // 插入节点后计算平衡
+        node.setDepth(calDepth(node));
+        node.setBalance(calBalance(node));
 
-
+        // 进行平衡操作
+        int balance = node.getBalance();
+        if(balance >= 1){
+            // 左边深度大于右边深度
+            if(null != node.getLeft() && null != node.getLeft().getRight()){
+                // 先对左子节点进行左旋
+                leftRotate(node.getLeft());
+            }
+            // 进行右旋
+            node = rightRotate(node);
+        }else if(balance <= -1){
+            // 右边深度大于左边深度
+            if(null != node.getRight() && null != node.getRight().getLeft()){
+                // 先对右子节点进行右旋
+                rightRotate(node.getRight());
+            }
+            // 进行左旋
+            node = leftRotate(node);
+        }
         return node;
     }
 
@@ -147,7 +181,7 @@ public class BalanceBinTree implements BinTree<AVLTreeNode> {
     * @date 2020/4/3 15:48
     **/
 
-    public void leftRotate(AVLTreeNode avlTreeNode){
+    public AVLTreeNode leftRotate(AVLTreeNode avlTreeNode){
         AVLTreeNode parent = avlTreeNode.getParent();
         AVLTreeNode rightSon = avlTreeNode.getRight();
         AVLTreeNode leftOfRightSon = rightSon.getLeft();
@@ -170,15 +204,19 @@ public class BalanceBinTree implements BinTree<AVLTreeNode> {
         if(null != leftOfRightSon){
             leftOfRightSon.setParent(avlTreeNode);
             avlTreeNode.setRight(leftOfRightSon);
+        }else{
+            avlTreeNode.setRight(null);
         }
 
         avlTreeNode.setDepth(calDepth(avlTreeNode));
         avlTreeNode.setBalance(calBalance(avlTreeNode));
         rightSon.setDepth(calDepth(rightSon));
         rightSon.setBalance(calBalance(rightSon));
+
+        return rightSon;
     }
 
-    public void rightRotate(AVLTreeNode avlTreeNode){
+    public AVLTreeNode rightRotate(AVLTreeNode avlTreeNode){
         AVLTreeNode parent = avlTreeNode.getParent();
         AVLTreeNode leftSon = avlTreeNode.getLeft();
         AVLTreeNode rightOfleftSon = leftSon.getRight();
@@ -198,11 +236,15 @@ public class BalanceBinTree implements BinTree<AVLTreeNode> {
         if(null != rightOfleftSon){
             rightOfleftSon.setParent(avlTreeNode);
             avlTreeNode.setLeft(rightOfleftSon);
+        }else{
+            avlTreeNode.setLeft(null);
         }
 
         avlTreeNode.setDepth(calDepth(avlTreeNode));
         avlTreeNode.setBalance(calBalance(avlTreeNode));
         leftSon.setDepth(calDepth(leftSon));
         leftSon.setBalance(calBalance(leftSon));
+
+        return leftSon;
     }
 }

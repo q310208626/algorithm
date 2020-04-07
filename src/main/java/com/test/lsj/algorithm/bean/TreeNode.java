@@ -5,8 +5,8 @@ public class TreeNode<T extends TreeNode<T>> {
     T left;
     T right;
 
-    TreeNode(){}
-    TreeNode(int x) { value = x; }
+    public TreeNode(){}
+    public TreeNode(int x) { value = x; }
 
     public int getValue() {
         return value;
