@@ -16,11 +16,12 @@ public class BalanceBinTree implements BinTree<AVLTreeNode> {
     AVLTreeNode avlTreeNode;
 
     public static void main(String[] args) {
-        int[] randomArrays = AlgorithmTool.createRandoms(10, 100);
-//        int[] randomArrays = new int[]{72,89,88,34,71};
+//        int[] randomArrays = AlgorithmTool.createRandoms(10, 100);
+        int[] randomArrays = new int[]{72,89,88,34,71};
         AlgorithmTool.listArrays();
         BalanceBinTree balanceBinTree = new BalanceBinTree();
         AVLTreeNode node = balanceBinTree.createTree(null,randomArrays);
+        node = balanceBinTree.delNode(node,88);
         BinTreeUtils.midViewTree(node);
     }
 
@@ -61,46 +62,148 @@ public class BalanceBinTree implements BinTree<AVLTreeNode> {
         node.setDepth(calDepth(node));
         node.setBalance(calBalance(node));
 
-        // 进行平衡操作
-        int balance = node.getBalance();
-        if(balance > 1){
-            // 左边深度大于右边深度
-            if(null != node.getLeft() && null != node.getLeft().getRight()){
-                // 先对左子节点进行左旋
-                leftRotate(node.getLeft());
-            }
-            // 进行右旋
-            node = rightRotate(node);
-        }else if(balance < -1){
-            // 右边深度大于左边深度
-            if(null != node.getRight() && null != node.getRight().getLeft()){
-                // 先对右子节点进行右旋
-                rightRotate(node.getRight());
-            }
-            // 进行左旋
-            node = leftRotate(node);
-        }
+        // 平衡树
+        node = balanceTree(node);
         return node;
     }
 
     @Override
     public AVLTreeNode delNode(AVLTreeNode node, int value) {
-        return null;
+        // 查询要删除的节点
+        AVLTreeNode target = getNode(node,value);
+
+        if(null != target){
+            AVLTreeNode parent = target.getParent();
+            AVLTreeNode leftSon = target.getLeft();
+            AVLTreeNode rightSon = target.getRight();
+
+            // 获取树的平衡
+            int balance = target.getBalance();
+            // 替代删除节点的节点
+            AVLTreeNode swapNode = null;
+            if(balance >= 0){
+                // 如果左子树比较高，取左子树最大节点代替删除的节点
+                swapNode = getMaxNode(leftSon);
+            }else{
+                // 如果右子树比较高，取左子树最小节点代替删除的节点
+                swapNode = getMinNode(rightSon);
+            }
+
+            // 如果删除的节点不是叶子节点
+            if(null != swapNode) {
+
+                // 删除替代节点与其父节点的关系
+                AVLTreeNode swapParentNode = swapNode.getParent();
+                swapNode.setParent(null);
+                if(swapParentNode.getLeft() == swapNode){
+                    swapParentNode.setLeft(null);
+                }else{
+                    swapParentNode.setRight(null);
+                }
+
+                // 重新获取删除节点的左右子树
+                leftSon = target.getLeft();
+                rightSon = target.getRight();
+
+                // 设置替代节点与原左右子树的关系
+                swapNode.setLeft(leftSon);
+                swapNode.setRight(rightSon);
+
+                if(null != leftSon){
+                    leftSon.setParent(swapNode);
+                }
+
+                if(null != rightSon){
+                    rightSon.setParent(swapNode);
+                }
+
+                // 删除的节点是根节点
+                if (null == parent) {
+                    node = swapNode;
+                } else {
+                    // 删除的节点不是根节点，则配置替代节点与原父节点的关系
+                    if(parent.getLeft() == target){
+                        parent.setLeft(swapNode);
+                        swapNode.setParent(parent);
+                    }else{
+                        parent.setRight(swapNode);
+                        swapNode.setParent(parent);
+                    }
+                    target.setParent(null);
+                }
+
+                // 重新计算左右子树的深度
+                if(null != leftSon){
+                    leftSon.setDepth(calDepth(leftSon));
+                }
+
+                if(null != rightSon){
+                    rightSon.setDepth(calDepth(rightSon));
+                }
+
+            }else{
+                // 删除的节点是叶子节点
+
+                // 删除的节点是根节点
+                if (null == parent) {
+                    node = swapNode;
+                } else {
+                    if (parent.getLeft() == target) {
+                        parent.setLeft(null);
+                    } else {
+                        parent.setRight(null);
+                    }
+                    target.setParent(null);
+                }
+            }
+            // 重新平衡
+            AVLTreeNode newParent = balanceTree(parent);
+            // 如果以根节点旋转,返回新的根节点
+            if(null != parent &&null == parent.getParent()){
+                node = newParent;
+            }
+        }
+
+        // 返回根节点
+        return node;
     }
 
     @Override
     public AVLTreeNode getNode(AVLTreeNode node, int value) {
-        return null;
+        if(null != node){
+
+            if(value == node.getValue()){
+                return node;
+            }else if(value < node.getValue()){
+                node = getNode(node.getLeft(),value);
+            }else {
+                node = getNode(node.getRight(),value);
+            }
+
+        }
+        return node;
     }
 
     @Override
     public AVLTreeNode getMaxNode(AVLTreeNode node) {
-        return null;
+        if (null == node) {
+            return null;
+        }
+        while (null != node.getRight()) {
+            node = node.getRight();
+        }
+        return node;
     }
 
     @Override
     public AVLTreeNode getMinNode(AVLTreeNode node) {
-        return null;
+        if (null == node) {
+            return null;
+        }
+        while (null != node.getLeft()) {
+            node = node.getLeft();
+        }
+        return node;
     }
 
     @Override
@@ -238,5 +341,29 @@ public class BalanceBinTree implements BinTree<AVLTreeNode> {
         leftSon.setBalance(calBalance(leftSon));
 
         return leftSon;
+    }
+
+    public AVLTreeNode balanceTree(AVLTreeNode node){
+        // 进行平衡操作
+        int balance = node.getBalance();
+        if(balance > 1){
+            // 左边深度大于右边深度
+            if(null != node.getLeft() && null != node.getLeft().getRight()){
+                // 先对左子节点进行左旋
+                leftRotate(node.getLeft());
+            }
+            // 进行右旋
+            node = rightRotate(node);
+        }else if(balance < -1){
+            // 右边深度大于左边深度
+            if(null != node.getRight() && null != node.getRight().getLeft()){
+                // 先对右子节点进行右旋
+                rightRotate(node.getRight());
+            }
+            // 进行左旋
+            node = leftRotate(node);
+        }
+
+        return node;
     }
 }
