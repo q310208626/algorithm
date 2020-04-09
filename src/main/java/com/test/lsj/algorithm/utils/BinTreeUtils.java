@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 public class BinTreeUtils {
     private static final Logger logger = Logger.getLogger(BinTreeUtils.class);
 
-    public static void preViewTree(BinTreeNode root){
+    public static void preViewTree(TreeNode root){
         if(null == root) {
             return;
         }
@@ -20,12 +20,21 @@ public class BinTreeUtils {
         preViewTree(root.getRight());
     }
 
-    public static void preViewTree(TreeNode root){
+    public static void midViewTree(TreeNode root){
         if(null == root) {
             return;
         }
+        midViewTree(root.getLeft());
         logger.debug(root.getValue());
-        preViewTree(root.getLeft());
-        preViewTree(root.getRight());
+        midViewTree(root.getRight());
+    }
+
+    public static void suffViewTree(TreeNode root){
+        if(null == root) {
+            return;
+        }
+        suffViewTree(root.getLeft());
+        suffViewTree(root.getRight());
+        logger.debug(root.getValue());
     }
 }
