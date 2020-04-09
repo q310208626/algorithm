@@ -16,12 +16,12 @@ public class BalanceBinTree implements BinTree<AVLTreeNode> {
     AVLTreeNode avlTreeNode;
 
     public static void main(String[] args) {
-//        int[] randomArrays = AlgorithmTool.createRandoms(5, 100);
-        int[] randomArrays = new int[]{72,89,88,34,71};
+        int[] randomArrays = AlgorithmTool.createRandoms(10, 100);
+//        int[] randomArrays = new int[]{72,89,88,34,71};
         AlgorithmTool.listArrays();
         BalanceBinTree balanceBinTree = new BalanceBinTree();
         AVLTreeNode node = balanceBinTree.createTree(null,randomArrays);
-        BinTreeUtils.preViewTree(node);
+        BinTreeUtils.midViewTree(node);
     }
 
     @Override
@@ -40,28 +40,20 @@ public class BalanceBinTree implements BinTree<AVLTreeNode> {
 
     @Override
     public AVLTreeNode addNode(AVLTreeNode node, int value) {
-        // 如果是根节点
+        // 如果节点为空，生成新节点
         if(null == node){
             node = new AVLTreeNode(value);
         }else{
             // 数值大于节点，插入右子树
             if(value > node.getValue()){
                 // 如果右子树为空，则右子树节点为插入目标，创建节点
-                if(null == node.getRight()){
-                    AVLTreeNode avlTreeNode = new AVLTreeNode(value);
-                    avlTreeNode.setParent(node);
-                    node.setRight(avlTreeNode);
-                }else{
-                    addNode(node.getRight(),value);
-                }
+                AVLTreeNode sonNode = addNode(node.getRight(),value);
+                sonNode.setParent(node);
+                node.setRight(sonNode);
             }else{
-                if(null == node.getLeft()){
-                    AVLTreeNode avlTreeNode = new AVLTreeNode(value);
-                    avlTreeNode.setParent(node);
-                    node.setLeft(avlTreeNode);
-                }else{
-                    addNode(node.getLeft(),value);
-                }
+                AVLTreeNode sonNode = addNode(node.getLeft(),value);
+                sonNode.setParent(node);
+                node.setLeft(sonNode);
             }
         }
 
@@ -71,7 +63,7 @@ public class BalanceBinTree implements BinTree<AVLTreeNode> {
 
         // 进行平衡操作
         int balance = node.getBalance();
-        if(balance >= 1){
+        if(balance > 1){
             // 左边深度大于右边深度
             if(null != node.getLeft() && null != node.getLeft().getRight()){
                 // 先对左子节点进行左旋
@@ -79,7 +71,7 @@ public class BalanceBinTree implements BinTree<AVLTreeNode> {
             }
             // 进行右旋
             node = rightRotate(node);
-        }else if(balance <= -1){
+        }else if(balance < -1){
             // 右边深度大于左边深度
             if(null != node.getRight() && null != node.getRight().getLeft()){
                 // 先对右子节点进行右旋
