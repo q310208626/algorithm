@@ -17,11 +17,11 @@ public class BalanceBinTree implements BinTree<AVLTreeNode> {
 
     public static void main(String[] args) {
 //        int[] randomArrays = AlgorithmTool.createRandoms(10, 100);
-        int[] randomArrays = new int[]{72,89,88,34,71};
+        int[] randomArrays = new int[]{45,90,28,26,61,69,59,22};
         AlgorithmTool.listArrays();
         BalanceBinTree balanceBinTree = new BalanceBinTree();
         AVLTreeNode node = balanceBinTree.createTree(null,randomArrays);
-        node = balanceBinTree.delNode(node,88);
+        node = balanceBinTree.delNode(node,90);
         BinTreeUtils.midViewTree(node);
     }
 
@@ -89,80 +89,83 @@ public class BalanceBinTree implements BinTree<AVLTreeNode> {
                 swapNode = getMinNode(rightSon);
             }
 
-            // 如果删除的节点不是叶子节点
-            if(null != swapNode) {
+                // 如果删除的节点不是叶子节点
+                if(null != swapNode) {
 
-                // 删除替代节点与其父节点的关系
-                AVLTreeNode swapParentNode = swapNode.getParent();
-                swapNode.setParent(null);
-                if(swapParentNode.getLeft() == swapNode){
-                    swapParentNode.setLeft(null);
-                }else{
-                    swapParentNode.setRight(null);
-                }
+                    // 删除替代节点与其父节点的关系
+                    AVLTreeNode swapParentNode = swapNode.getParent();
+                    swapNode.setParent(null);
+                    if(null != swapParentNode) {
+                        if (swapParentNode.getLeft() == swapNode) {
+                            swapParentNode.setLeft(null);
+                        } else {
+                            swapParentNode.setRight(null);
+                        }
 
-                // 重新获取删除节点的左右子树
-                leftSon = target.getLeft();
-                rightSon = target.getRight();
-
-                // 设置替代节点与原左右子树的关系
-                swapNode.setLeft(leftSon);
-                swapNode.setRight(rightSon);
-
-                if(null != leftSon){
-                    leftSon.setParent(swapNode);
-                }
-
-                if(null != rightSon){
-                    rightSon.setParent(swapNode);
-                }
-
-                // 删除的节点是根节点
-                if (null == parent) {
-                    node = swapNode;
-                } else {
-                    // 删除的节点不是根节点，则配置替代节点与原父节点的关系
-                    if(parent.getLeft() == target){
-                        parent.setLeft(swapNode);
-                        swapNode.setParent(parent);
-                    }else{
-                        parent.setRight(swapNode);
-                        swapNode.setParent(parent);
+                        // 往上重新计算深度跟平衡，直到到达被删除的节点
+                        while(swapParentNode != parent){
+                            swapParentNode.setDepth(calDepth(swapParentNode));
+                            swapParentNode.setBalance(calBalance(swapParentNode));
+                            swapParentNode = swapParentNode.getParent();
+                        }
                     }
-                    target.setParent(null);
-                }
 
-                // 重新计算左右子树的深度
-                if(null != leftSon){
-                    leftSon.setDepth(calDepth(leftSon));
-                }
+                    // 重新获取删除节点的左右子树
+                    leftSon = target.getLeft();
+                    rightSon = target.getRight();
 
-                if(null != rightSon){
-                    rightSon.setDepth(calDepth(rightSon));
-                }
+                    // 换节点与删除节点的左右子树关系
+                    swapNode.setLeft(leftSon);
+                    swapNode.setRight(rightSon);
+                    if (null != leftSon) {
+                        leftSon.setParent(swapNode);
+                    }
+                    if (null != rightSon) {
+                        rightSon.setParent(swapNode);
+                    }
 
-            }else{
-                // 删除的节点是叶子节点
-
-                // 删除的节点是根节点
-                if (null == parent) {
-                    node = swapNode;
-                } else {
-                    if (parent.getLeft() == target) {
-                        parent.setLeft(null);
+                    // 删除的节点是根节点
+                    if (null == parent) {
+                        parent = swapNode;
+                        swapNode.setParent(null);
                     } else {
-                        parent.setRight(null);
+                        // 替换节点与删除节点的父子关系
+                        if (parent.getLeft() == target) {
+                            parent.setLeft(swapNode);
+                        } else {
+                            parent.setRight(swapNode);
+                        }
+                        swapNode.setParent(parent);
                     }
-                    target.setParent(null);
+
+                }else{
+                    // 删除的是叶子节点
+                    // 删除的节点是根节点
+                    if (null == parent) {
+                        parent = swapNode;
+                        node = null;
+                    } else {
+                        // 替换节点与删除节点的父子关系
+                        if (parent.getLeft() == target) {
+                            parent.setLeft(null);
+                        } else {
+                            parent.setRight(null);
+                        }
+                    }
+                }
+
+                // 删除目标节点
+                target.setParent(null);
+                target.setLeft(null);
+                target.setRight(null);
+
+                AVLTreeNode newParentNode = parent;
+                // 重新平衡
+                while(null != newParentNode){
+                    node = balanceTree(newParentNode);
+                    newParentNode = newParentNode.getParent();
                 }
             }
-            // 重新平衡
-            AVLTreeNode newParent = balanceTree(parent);
-            // 如果以根节点旋转,返回新的根节点
-            if(null != parent &&null == parent.getParent()){
-                node = newParent;
-            }
-        }
 
         // 返回根节点
         return node;
@@ -367,3 +370,4 @@ public class BalanceBinTree implements BinTree<AVLTreeNode> {
         return node;
     }
 }
+
